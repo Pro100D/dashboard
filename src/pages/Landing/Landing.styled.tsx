@@ -65,4 +65,5 @@ export const SubmitBtn = styled.button`
   font-weight: 700;
   line-height: normal;
   letter-spacing: 0.48px;
+  filter: drop-shadow(4px 4px 4px rgba(0, 215, 255, 0.25));
 `;

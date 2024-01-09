@@ -9,10 +9,13 @@ import {
 } from './Landing.styled';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useNavigate } from 'react-router-dom';
 
 export const Landing = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
   const onSubmitForm = (e: FormEvent) => {
     e.preventDefault();
     const newUser = {
@@ -20,6 +23,8 @@ export const Landing = () => {
       password,
       id: nanoid(),
     };
+    // логиним юзера и если всё хорошо перенаправляем на дашборд
+    navigate('/dashboard', { replace: true });
 
     console.log(newUser);
   };
