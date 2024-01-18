@@ -1,16 +1,14 @@
-// import { TaskProps } from 'components/Tasks/Tasks';
+import { Task } from 'components/Tasks/Tasks';
 
-export const TaskItem = ({
+export const TaskItem: React.FC<{ task: Task }> = ({
   task: { title, difficulty, category, date, time, type },
-}) => {
-  return (
-    <li>
-      <p>{title}</p>
-      <p>{difficulty}</p>
-      <p>{category}</p>
-      <p>{date}</p>
-      <p>{time}</p>
-      <p>{type}</p>
-    </li>
-  );
-};
+}) => (
+  <li>
+    <p>{title}</p>
+    <p>{difficulty}</p>
+    <p>{category}</p>
+    <p>{date}</p>
+    <p>{time}</p>
+    <p>{type}</p>
+  </li>
+);

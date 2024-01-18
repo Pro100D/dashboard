@@ -1,8 +1,12 @@
 import { TaskItem } from 'components/TaskItem';
-// import { TaskProps } from 'components/Tasks/Tasks';
+import { Task } from 'components/Tasks/Tasks';
 
-export const TaskList = ({ tasks }) => {
-  return tasks.map(task => {
-    return <TaskItem task={task} />;
-  });
+export const TaskList: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
+  return (
+    <>
+      {tasks.map((task: Task) => (
+        <TaskItem key={task.id} task={task} />
+      ))}
+    </>
+  );
 };

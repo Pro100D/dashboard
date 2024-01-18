@@ -1,9 +1,19 @@
 import { TaskList } from 'components/TaskList';
+import { nanoid } from 'nanoid';
 import { FormEvent, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 
+export type Task = {
+  title: string;
+  difficulty: string;
+  category: string;
+  date: string;
+  time: string;
+  type: string;
+  id: string;
+};
 export const Tasks = () => {
-  const [tasks, setTasks] = useState([
+  const [tasks, setTasks] = useState<Task[]>([
     {
       title: 'Take out the',
       difficulty: 'Easy',
@@ -11,6 +21,7 @@ export const Tasks = () => {
       date: '2020-12-25',
       time: '20:34',
       type: 'Task',
+      id: '3',
     },
     {
       title: 'Take out',
@@ -19,6 +30,7 @@ export const Tasks = () => {
       date: '2023-12-12',
       time: '20:37',
       type: 'Task',
+      id: '2',
     },
     {
       title: 'Take',
@@ -27,22 +39,26 @@ export const Tasks = () => {
       date: '2021-12-31',
       time: '20:50',
       type: 'Task',
+      id: '1',
     },
   ]);
   const [showForm, setShowForm] = useState(false);
 
   const onSubmitForm = (e: FormEvent) => {
-    const { target: elements } = e;
+    const form = e.target as HTMLFormElement;
 
     e.preventDefault();
 
     const newTask = {
-      title: elements.title.value,
-      difficulty: elements.difficulty.value,
-      category: elements.category.value,
-      date: elements.date.value,
-      time: elements.date.value,
+      title: (form.elements.namedItem('title') as HTMLInputElement)?.value,
+      difficulty: (form.elements.namedItem('difficulty') as HTMLSelectElement)
+        ?.value,
+      category: (form.elements.namedItem('category') as HTMLSelectElement)
+        ?.value,
+      date: (form.elements.namedItem('date') as HTMLInputElement)?.value,
+      time: (form.elements.namedItem('time') as HTMLInputElement)?.value,
       type: 'Task',
+      id: nanoid(),
     };
 
     setTasks([...tasks, newTask]);
@@ -59,7 +75,8 @@ export const Tasks = () => {
             <option value="Hard">Hard</option>
           </select>
           <input type="text" name="title" />
-          <input type="data" name="date" />
+          <input type="time" name="date" />
+          <input type="date" name="date" />
           <select name="category">
             <option value="STUFF">STUFF</option>
             <option value="FAMILY">FAMILY</option>
