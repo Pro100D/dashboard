@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from 'redux/store';
 
@@ -9,10 +9,10 @@ type User = {
 };
 const token = {
   setToken(token: string) {
-    return (axios.defaults.headers.common.Authorization = `Bearer ${token}`);
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
   },
   unsetToken() {
-    return (axios.defaults.headers.common.Authorization = ' ');
+    axios.defaults.headers.common.Authorization = ' ';
   },
 };
 
@@ -21,8 +21,6 @@ export const signUp = createAsyncThunk(
   async (credentials: User, thunkAPI) => {
     try {
       const { data } = await axios.post('/auth/register', credentials);
-
-      console.log(data);
       return data;
     } catch (error) {}
   }
@@ -33,25 +31,48 @@ export const singIn = createAsyncThunk(
   async (credentials: User, thunkAPI) => {
     try {
       const { data } = await axios.post('/auth/login', credentials);
+
       token.setToken(data.accessToken);
       return data;
     } catch (error) {}
   }
 );
 
-export const refreshingUser = createAsyncThunk(
-  '/refresh/user',
-  async (_, thunkAPI) => {
-    const state: RootState = thunkAPI.getState();
-    const persistedToken = state.auth.token;
-
-    if (state.auth.token === null) {
-      return thunkAPI.rejectWithValue('Unable to fetch user');
-    }
-    try {
-      token.setToken(persistedToken);
-      const res = await axios.post('/auth/refresh', { sid: state.auth.sid });
-      console.log(res);
-    } catch (error) {}
+export const logOut = createAsyncThunk('/auth/logout', async (_, thunkAPI) => {
+  const state: RootState = thunkAPI.getState();
+  const accessToken = state.auth.accessToken;
+  try {
+    token.setToken(accessToken);
+    await axios.post('/auth/logout');
+    token.unsetToken();
+  } catch (error: any) {
+    throw thunkAPI.rejectWithValue(error.massage);
   }
-);
+});
+
+type ResponseRefresh = {
+  newAccessToken: string;
+  newRefreshToken: string;
+  newSid: string;
+};
+
+export const refreshingUser: AsyncThunk<
+  ResponseRefresh,
+  void,
+  { state: RootState }
+> = createAsyncThunk('/refresh/user', async (_, thunkAPI) => {
+  const state: RootState = thunkAPI.getState();
+  const persistedToken = state.auth.refreshToken;
+
+  if (persistedToken === null) {
+    return thunkAPI.rejectWithValue('Unable to fetch user');
+  }
+  try {
+    token.setToken(persistedToken);
+    const { data } = await axios.post('/auth/refresh', {
+      sid: state.auth.sid,
+    });
+
+    return data;
+  } catch (error) {}
+});

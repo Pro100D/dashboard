@@ -38,8 +38,6 @@ export const Landing = () => {
     } catch (error) {
       console.log(error);
     }
-
-    // логиним юзера и если всё хорошо перенаправляем на дашборд
   };
   return (
     <Container>

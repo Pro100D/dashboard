@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { refreshingUser, signUp, singIn } from './operations';
+import { logOut, refreshingUser, singIn } from './operations';
 type InitialStateType = {
   user: {
     email: string | null;
@@ -7,7 +7,8 @@ type InitialStateType = {
     cards: [];
   };
   sid: string | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isLoading: boolean;
   isRefreshing: boolean;
   isAuth: boolean;
@@ -20,7 +21,8 @@ const initialState: InitialStateType = {
     cards: [],
   },
   sid: null,
-  token: null,
+  accessToken: null,
+  refreshToken: null,
   isLoading: false,
   isRefreshing: false,
   isAuth: false,
@@ -31,17 +33,27 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(signUp.fulfilled, (state, { payload }) => {})
       .addCase(singIn.fulfilled, (state, { payload }) => {
         state.sid = payload.sid;
-        state.token = payload.accessToken;
+        state.accessToken = payload.accessToken;
+        state.refreshToken = payload.refreshToken;
         state.user = payload.userData;
         state.isAuth = true;
+      })
+      .addCase(logOut.fulfilled, state => {
+        state.user = initialState.user;
+        state.sid = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.isAuth = false;
       })
       .addCase(refreshingUser.pending, state => {
         state.isRefreshing = true;
       })
       .addCase(refreshingUser.fulfilled, (state, { payload }) => {
+        state.accessToken = payload.newAccessToken;
+        state.refreshToken = payload.newRefreshToken;
+        state.sid = payload.newSid;
         state.isAuth = true;
         state.isRefreshing = false;
       })

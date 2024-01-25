@@ -1,6 +1,7 @@
+import { getAllTask } from 'api';
 import { TaskList } from 'components/TaskList';
 import { nanoid } from 'nanoid';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 
 export type Task = {
@@ -12,6 +13,7 @@ export type Task = {
   type: string;
   id: string;
 };
+
 export const Tasks = () => {
   const [tasks, setTasks] = useState<Task[]>([
     {
@@ -43,6 +45,9 @@ export const Tasks = () => {
     },
   ]);
   const [showForm, setShowForm] = useState(false);
+  // useEffect(() => {
+  //   getAllTask();
+  // }, []);
 
   const onSubmitForm = (e: FormEvent) => {
     const form = e.target as HTMLFormElement;
