@@ -1,2 +1,2 @@
 export * from './instance';
-export * from './tasks';
+export * from './tasksApi';

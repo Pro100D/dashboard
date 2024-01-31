@@ -7,7 +7,7 @@ type User = {
   email: string;
   password: string;
 };
-const token = {
+export const onSetToken = {
   setToken(token: string) {
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
   },
@@ -32,7 +32,7 @@ export const singIn = createAsyncThunk(
     try {
       const { data } = await axios.post('/auth/login', credentials);
 
-      token.setToken(data.accessToken);
+      onSetToken.setToken(data.accessToken);
       return data;
     } catch (error) {}
   }
@@ -42,9 +42,9 @@ export const logOut = createAsyncThunk('/auth/logout', async (_, thunkAPI) => {
   const state: RootState = thunkAPI.getState();
   const accessToken = state.auth.accessToken;
   try {
-    token.setToken(accessToken);
+    onSetToken.setToken(accessToken);
     await axios.post('/auth/logout');
-    token.unsetToken();
+    onSetToken.unsetToken();
   } catch (error: any) {
     throw thunkAPI.rejectWithValue(error.massage);
   }
@@ -68,7 +68,7 @@ export const refreshingUser: AsyncThunk<
     return thunkAPI.rejectWithValue('Unable to fetch user');
   }
   try {
-    token.setToken(persistedToken);
+    onSetToken.setToken(persistedToken);
     const { data } = await axios.post('/auth/refresh', {
       sid: state.auth.sid,
     });

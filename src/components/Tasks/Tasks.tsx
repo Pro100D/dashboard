@@ -1,8 +1,9 @@
-import { getAllTask } from 'api';
+import { addTask, getAllTask } from 'api';
 import { TaskList } from 'components/TaskList';
-import { nanoid } from 'nanoid';
 import { FormEvent, useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
+import { useSelector } from 'react-redux';
+import { tokens } from '../../redux/auth/selectors';
 
 export type Task = {
   title: string;
@@ -11,45 +12,21 @@ export type Task = {
   date: string;
   time: string;
   type: string;
-  id: string;
+  _id?: string;
 };
 
 export const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      title: 'Take out the',
-      difficulty: 'Easy',
-      category: 'Stuff',
-      date: '2020-12-25',
-      time: '20:34',
-      type: 'Task',
-      id: '3',
-    },
-    {
-      title: 'Take out',
-      difficulty: 'Easy',
-      category: 'reading',
-      date: '2023-12-12',
-      time: '20:37',
-      type: 'Task',
-      id: '2',
-    },
-    {
-      title: 'Take',
-      difficulty: 'hard',
-      category: 'learning',
-      date: '2021-12-31',
-      time: '20:50',
-      type: 'Task',
-      id: '1',
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [showForm, setShowForm] = useState(false);
-  // useEffect(() => {
-  //   getAllTask();
-  // }, []);
+  const token = useSelector(tokens);
 
-  const onSubmitForm = (e: FormEvent) => {
+  useEffect(() => {
+    (async () => {
+      setTasks(await getAllTask(token));
+    })();
+  }, [token]);
+
+  const onSubmitForm = async (e: FormEvent) => {
     const form = e.target as HTMLFormElement;
 
     e.preventDefault();
@@ -63,13 +40,15 @@ export const Tasks = () => {
       date: (form.elements.namedItem('date') as HTMLInputElement)?.value,
       time: (form.elements.namedItem('time') as HTMLInputElement)?.value,
       type: 'Task',
-      id: nanoid(),
     };
 
-    setTasks([...tasks, newTask]);
+    const createdCard = await addTask(token, newTask);
+
+    setTasks(prevState => {
+      return [...prevState, createdCard];
+    });
     setShowForm(prevState => !prevState);
   };
-
   return (
     <section>
       {showForm && (
@@ -80,15 +59,15 @@ export const Tasks = () => {
             <option value="Hard">Hard</option>
           </select>
           <input type="text" name="title" />
-          <input type="time" name="date" />
+          <input type="time" name="time" />
           <input type="date" name="date" />
           <select name="category">
-            <option value="STUFF">STUFF</option>
-            <option value="FAMILY">FAMILY</option>
-            <option value="HEALTH">HEALTH</option>
-            <option value="LEARNING">LEARNING</option>
-            <option value="LEISURE">LEISURE</option>
-            <option value="WORK">WORK</option>
+            <option value="Stuff">STUFF</option>
+            <option value="Family">FAMILY</option>
+            <option value="Health">HEALTH</option>
+            <option value="Learning">LEARNING</option>
+            <option value="Leisure">LEISURE</option>
+            <option value="Work">WORK</option>
           </select>
           <button type="submit">start</button>
         </form>

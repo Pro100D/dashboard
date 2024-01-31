@@ -5,7 +5,7 @@ export const TaskList: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
   return (
     <>
       {tasks.map((task: Task) => (
-        <TaskItem key={task.id} task={task} />
+        <TaskItem key={task._id} task={task} />
       ))}
     </>
   );
