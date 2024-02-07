@@ -32,4 +32,10 @@ export const addTask = async (
 export const deletedTask = async (
   { accessToken, refreshToken }: Tokens,
   id: string
-) => {};
+) => {
+  try {
+    onSetToken.setToken(accessToken);
+    await axios.delete(`/card/${id}`);
+    onSetToken.setToken(refreshToken);
+  } catch (error) {}
+};

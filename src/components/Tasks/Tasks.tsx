@@ -1,9 +1,10 @@
-import { addTask, getAllTask } from 'api';
+import { addTask, deletedTask, getAllTask } from 'api';
 import { TaskList } from 'components/TaskList';
 import { FormEvent, useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { useSelector } from 'react-redux';
 import { tokens } from '../../redux/auth/selectors';
+import { TaskForm } from 'components/TaskForm';
 
 export type Task = {
   title: string;
@@ -42,37 +43,56 @@ export const Tasks = () => {
       type: 'Task',
     };
 
+    onAddTask(newTask);
+    setShowForm(prevState => !prevState);
+  };
+
+  const onAddTask = async (newTask: Task) => {
     const createdCard = await addTask(token, newTask);
 
     setTasks(prevState => {
-      return [...prevState, createdCard];
+      return [createdCard, ...prevState];
     });
-    setShowForm(prevState => !prevState);
   };
+
+  const onDeleteTask = async (id: string) => {
+    await deletedTask(token, id);
+    const filteredTasks = tasks.filter(task => task._id !== id);
+    setTasks(filteredTasks);
+  };
+
+  const onEditTask = (e: FormEvent) => {
+    const form = e.target as HTMLFormElement;
+
+    e.preventDefault();
+
+    const editTask = {
+      title: (form.elements.namedItem('title') as HTMLInputElement)?.value,
+      difficulty: (form.elements.namedItem('difficulty') as HTMLSelectElement)
+        ?.value,
+      category: (form.elements.namedItem('category') as HTMLSelectElement)
+        ?.value,
+      date: (form.elements.namedItem('date') as HTMLInputElement)?.value,
+      time: (form.elements.namedItem('time') as HTMLInputElement)?.value,
+      type: 'Task',
+      _id: form.dataset.taskId,
+    };
+
+    const findIndexEditTask = tasks.findIndex(
+      task => task._id === editTask._id
+    );
+    setTasks(prevState =>
+      [...prevState].toSpliced(findIndexEditTask, 1, editTask)
+    );
+  };
+
   return (
     <section>
-      {showForm && (
-        <form onSubmit={onSubmitForm}>
-          <select name="difficulty">
-            <option value="Easy">Easy</option>
-            <option value="Normal">Normal</option>
-            <option value="Hard">Hard</option>
-          </select>
-          <input type="text" name="title" />
-          <input type="time" name="time" />
-          <input type="date" name="date" />
-          <select name="category">
-            <option value="Stuff">STUFF</option>
-            <option value="Family">FAMILY</option>
-            <option value="Health">HEALTH</option>
-            <option value="Learning">LEARNING</option>
-            <option value="Leisure">LEISURE</option>
-            <option value="Work">WORK</option>
-          </select>
-          <button type="submit">start</button>
-        </form>
-      )}
-      <TaskList tasks={tasks} />
+      {showForm && <TaskForm onSubmitForm={onSubmitForm} />}
+      <TaskList
+        tasks={tasks}
+        functionsTask={{ onDelete: onDeleteTask, onSubmitForm: onEditTask }}
+      />
       <button
         type="button"
         onClick={() => setShowForm(prevState => !prevState)}
