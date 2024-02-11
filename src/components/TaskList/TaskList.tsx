@@ -5,8 +5,8 @@ import { FormEvent } from 'react';
 export const TaskList: React.FC<{
   tasks: Task[];
   functionsTask: {
-    onDelete: (id: string) => Promise<void>;
-    onSubmitForm: (e: FormEvent) => Promise<void>;
+    onDelete: (id: string) => void;
+    onSubmitForm: (e: FormEvent) => void;
   };
 }> = ({ tasks, functionsTask }) => {
   return (

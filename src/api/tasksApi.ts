@@ -29,13 +29,34 @@ export const addTask = async (
     return createdCard;
   } catch (error) {}
 };
+
 export const deletedTask = async (
   { accessToken, refreshToken }: Tokens,
-  id: string
+  TaskId: string
 ) => {
   try {
     onSetToken.setToken(accessToken);
-    await axios.delete(`/card/${id}`);
+    await axios.delete(`/card/${TaskId}`);
     onSetToken.setToken(refreshToken);
+  } catch (error) {}
+};
+
+export const editingTask = async (
+  { accessToken, refreshToken }: Tokens,
+  { title, difficulty, category, date, time, type, _id }: Task
+) => {
+  try {
+    onSetToken.setToken(accessToken);
+    const { data } = await axios.patch(`/card/${_id}`, {
+      title,
+      difficulty,
+      category,
+      date,
+      time,
+      type,
+    });
+
+    onSetToken.setToken(refreshToken);
+    return data;
   } catch (error) {}
 };

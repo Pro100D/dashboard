@@ -1,4 +1,4 @@
-import { addTask, deletedTask, getAllTask } from 'api';
+import { addTask, deletedTask, editingTask, getAllTask } from 'api';
 import { TaskList } from 'components/TaskList';
 import { FormEvent, useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
@@ -61,7 +61,7 @@ export const Tasks = () => {
     setTasks(filteredTasks);
   };
 
-  const onEditTask = (e: FormEvent) => {
+  const onEditTask = async (e: FormEvent) => {
     const form = e.target as HTMLFormElement;
 
     e.preventDefault();
@@ -78,17 +78,19 @@ export const Tasks = () => {
       _id: form.dataset.taskId,
     };
 
+    await editingTask(token, editTask);
+
     const findIndexEditTask = tasks.findIndex(
       task => task._id === editTask._id
     );
-    setTasks(prevState =>
-      [...prevState].toSpliced(findIndexEditTask, 1, editTask)
-    );
+    setTasks(prevState => prevState.toSpliced(findIndexEditTask, 1, editTask));
   };
 
   return (
     <section>
-      {showForm && <TaskForm onSubmitForm={onSubmitForm} />}
+      {showForm && (
+        <TaskForm onSubmitForm={onSubmitForm} setShowForm={setShowForm} />
+      )}
       <TaskList
         tasks={tasks}
         functionsTask={{ onDelete: onDeleteTask, onSubmitForm: onEditTask }}

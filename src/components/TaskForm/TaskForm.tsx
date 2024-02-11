@@ -3,12 +3,27 @@ import { FormEvent } from 'react';
 
 type TaskFormProps = {
   task?: Task;
-  onSubmitForm: (e: FormEvent) => Promise<void>;
+  onSubmitForm: (e: FormEvent) => void;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsRefactoring: React.Dispatch<React.SetStateAction<boolean>>;
+  isRefactoring: boolean;
 };
 
-export const TaskForm = ({ onSubmitForm, task }: TaskFormProps) => {
+export const TaskForm = ({
+  onSubmitForm,
+  task,
+  setShowForm,
+  isRefactoring,
+  setIsRefactoring,
+}: TaskFormProps) => {
   return (
-    <form onSubmit={e => onSubmitForm(e)} data-task-id={task?._id}>
+    <form
+      onSubmit={e => {
+        onSubmitForm(e);
+        isRefactoring ? setIsRefactoring(false) : setShowForm(false);
+      }}
+      data-task-id={task?._id}
+    >
       <select name="difficulty" defaultValue={task?.difficulty}>
         <option value="Easy">Easy</option>
         <option value="Normal">Normal</option>
@@ -25,7 +40,19 @@ export const TaskForm = ({ onSubmitForm, task }: TaskFormProps) => {
         <option value="Leisure">LEISURE</option>
         <option value="Work">WORK</option>
       </select>
-      <button type="submit">start</button>
+      <button
+        type="button"
+        onClick={() =>
+          isRefactoring ? setIsRefactoring(false) : setShowForm(false)
+        }
+      >
+        close
+      </button>
+      {isRefactoring ? (
+        <button type="submit">complete</button>
+      ) : (
+        <button type="submit">start</button>
+      )}
     </form>
   );
 };

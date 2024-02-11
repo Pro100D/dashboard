@@ -5,19 +5,19 @@ import { FormEvent, useState } from 'react';
 export const TaskItem: React.FC<{
   task: Task;
   functionsTask: {
-    onDelete: (id: string) => Promise<void>;
-    onSubmitForm: (e: FormEvent) => Promise<void>;
+    onDelete: (id: string) => void;
+    onSubmitForm: (e: FormEvent) => void;
   };
 }> = ({
-  task: { title, difficulty, category, date, time, type, _id },
+  task: { title, difficulty, category, date, time, type, _id = '' },
   functionsTask: { onDelete, onSubmitForm },
 }) => {
-  const [isEdit, setIsEdit] = useState(false);
+  const [isRefactoring, setIsRefactoring] = useState(false);
 
   return (
     <li>
       <div>
-        {!isEdit ? (
+        {!isRefactoring ? (
           <>
             <p>{title}</p>
             <p>{difficulty}</p>
@@ -30,17 +30,20 @@ export const TaskItem: React.FC<{
           <TaskForm
             onSubmitForm={onSubmitForm}
             task={{ title, difficulty, category, date, time, type, _id }}
+            isRefactoring
+            setIsRefactoring={setIsRefactoring}
           />
         )}
-        <button type="button" onClick={() => setIsEdit(true)}>
-          refactor
-        </button>
-        <button type="button" onClick={() => onDelete(_id)}>
-          delete
-        </button>
-        <button type="button" onClick={() => setIsEdit(false)}>
-          complete
-        </button>
+        {!isRefactoring && (
+          <>
+            <button type="button" onClick={() => setIsRefactoring(true)}>
+              refactor
+            </button>
+            <button type="button" onClick={() => onDelete(_id)}>
+              delete
+            </button>
+          </>
+        )}
       </div>
     </li>
   );
