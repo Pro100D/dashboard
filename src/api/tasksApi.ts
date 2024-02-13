@@ -20,14 +20,12 @@ export const addTask = async (
   { accessToken, refreshToken }: Tokens,
   task: Task
 ) => {
-  try {
-    onSetToken.setToken(accessToken);
-    const {
-      data: { createdCard },
-    } = await axios.post('/card', task);
-    onSetToken.setToken(refreshToken);
-    return createdCard;
-  } catch (error) {}
+  onSetToken.setToken(accessToken);
+  const {
+    data: { createdCard },
+  } = await axios.post('/card', task);
+  onSetToken.setToken(refreshToken);
+  return createdCard;
 };
 
 export const deletedTask = async (

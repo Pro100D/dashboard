@@ -48,11 +48,15 @@ export const Tasks = () => {
   };
 
   const onAddTask = async (newTask: Task) => {
-    const createdCard = await addTask(token, newTask);
+    try {
+      const createdCard = await addTask(token, newTask);
 
-    setTasks(prevState => {
-      return [createdCard, ...prevState];
-    });
+      setTasks(prevState => {
+        return [createdCard, ...prevState];
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onDeleteTask = async (id: string) => {

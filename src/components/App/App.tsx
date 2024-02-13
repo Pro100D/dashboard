@@ -1,18 +1,23 @@
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { Landing } from 'pages/Landing';
-import { Dashboard } from 'pages/Dashboard';
-import { RestrictedRoute } from 'components/RestrictedRoute';
+import { AppDispatch } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshingUser } from '../../redux/auth/operations';
-import { useEffect } from 'react';
-import { PrivateRoute } from 'components/PrivateRoute';
-import { AppDispatch } from 'redux/store';
 import { refreshingUserSelector } from '../../redux/auth/selectors';
+
+import { Spinner } from 'components/shared/Spinner/Spinner';
+import { PrivateRoute } from 'components/PrivateRoute';
+import { RestrictedRoute } from 'components/RestrictedRoute';
+
+import { Dashboard } from 'pages/Dashboard';
+import { Landing } from 'pages/Landing';
+import { Backdrop } from 'components/shared/Backdrop/Backdrop';
 
 export const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isRefreshing = useSelector(refreshingUserSelector);
+
   useEffect(() => {
     dispatch(refreshingUser());
   }, [dispatch]);
@@ -31,7 +36,9 @@ export const App = () => {
       />
     </Routes>
   ) : (
-    <div>Loading...</div>
+    <Backdrop>
+      <Spinner />
+    </Backdrop>
   );
 };
 

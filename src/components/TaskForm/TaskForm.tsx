@@ -4,9 +4,9 @@ import { FormEvent } from 'react';
 type TaskFormProps = {
   task?: Task;
   onSubmitForm: (e: FormEvent) => void;
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsRefactoring: React.Dispatch<React.SetStateAction<boolean>>;
-  isRefactoring: boolean;
+  setShowForm?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsRefactoring?: React.Dispatch<React.SetStateAction<boolean>>;
+  isRefactoring?: boolean;
 };
 
 export const TaskForm = ({
@@ -16,11 +16,20 @@ export const TaskForm = ({
   isRefactoring,
   setIsRefactoring,
 }: TaskFormProps) => {
+  const showModals = () => {
+    if (setIsRefactoring !== undefined) {
+      isRefactoring && setIsRefactoring(false);
+    }
+    if (setShowForm !== undefined) {
+      isRefactoring && setShowForm(false);
+    }
+  };
+
   return (
     <form
       onSubmit={e => {
         onSubmitForm(e);
-        isRefactoring ? setIsRefactoring(false) : setShowForm(false);
+        showModals();
       }}
       data-task-id={task?._id}
     >
@@ -29,9 +38,17 @@ export const TaskForm = ({
         <option value="Normal">Normal</option>
         <option value="Hard">Hard</option>
       </select>
-      <input type="text" name="title" defaultValue={task?.title} />
-      <input type="time" name="time" defaultValue={task?.time} />
-      <input type="date" name="date" defaultValue={task?.date} />
+      <input
+        type="text"
+        name="title"
+        defaultValue={task?.title}
+        required
+        placeholder="Enter your quest"
+        min="2"
+        max="100"
+      />
+      <input type="time" name="time" defaultValue={task?.time} required />
+      <input type="date" name="date" defaultValue={task?.date} required />
       <select name="category" defaultValue={task?.category}>
         <option value="Stuff">STUFF</option>
         <option value="Family">FAMILY</option>
@@ -40,12 +57,7 @@ export const TaskForm = ({
         <option value="Leisure">LEISURE</option>
         <option value="Work">WORK</option>
       </select>
-      <button
-        type="button"
-        onClick={() =>
-          isRefactoring ? setIsRefactoring(false) : setShowForm(false)
-        }
-      >
+      <button type="button" onClick={() => showModals()}>
         close
       </button>
       {isRefactoring ? (

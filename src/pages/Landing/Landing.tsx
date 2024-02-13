@@ -25,19 +25,18 @@ export const Landing = () => {
       email,
       password,
     };
-    try {
-      if (authorize) {
-        dispatch(singIn(newUser));
 
-        return;
-      }
-      dispatch(signUp(newUser));
-      setAuthorize(prevState => !prevState);
-      setEmail('');
-      setPassword('');
-    } catch (error) {
-      console.log(error);
+    if (authorize) {
+      dispatch(singIn(newUser));
+
+      return;
     }
+    dispatch(signUp(newUser));
+    console.log(authorize);
+    setAuthorize(true);
+    console.log(authorize);
+    setEmail('');
+    setPassword('');
   };
   return (
     <Container>
@@ -62,6 +61,7 @@ export const Landing = () => {
           <LandingInput
             type="email"
             placeholder="Enter you email"
+            required
             value={email}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setEmail(e.target.value);
@@ -69,6 +69,7 @@ export const Landing = () => {
           />
           <LandingInput
             type="password"
+            required
             placeholder="Enter you password"
             value={password}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {

@@ -1,8 +1,8 @@
 import { AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Notiflix from 'notiflix';
 import { RootState } from 'redux/store';
 
-axios.defaults.baseURL = 'https://questify-backend.goit.global';
 type User = {
   email: string;
   password: string;
@@ -22,7 +22,9 @@ export const signUp = createAsyncThunk(
     try {
       const { data } = await axios.post('/auth/register', credentials);
       return data;
-    } catch (error) {}
+    } catch (error) {
+      throw thunkAPI.rejectWithValue(error.massage);
+    }
   }
 );
 
@@ -34,7 +36,12 @@ export const singIn = createAsyncThunk(
 
       onSetToken.setToken(data.accessToken);
       return data;
-    } catch (error) {}
+    } catch (error) {
+      Notiflix.Notify.failure('Incorrect username or password, try again', {
+        clickToClose: true,
+      });
+      throw thunkAPI.rejectWithValue(error.massage);
+    }
   }
 );
 
