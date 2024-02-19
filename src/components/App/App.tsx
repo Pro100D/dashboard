@@ -30,6 +30,7 @@ export const App = () => {
           <RestrictedRoute redirectTo="/dashboard" component={<Landing />} />
         }
       />
+
       <Route
         path="/dashboard"
         element={<PrivateRoute redirectTo="/" component={<Dashboard />} />}

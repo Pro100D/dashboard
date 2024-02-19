@@ -21,6 +21,13 @@ export const signUp = createAsyncThunk(
   async (credentials: User, thunkAPI) => {
     try {
       const { data } = await axios.post('/auth/register', credentials);
+      Notiflix.Notify.warning(
+        'Please enter your email address and password again to confirm',
+        {
+          clickToClose: true,
+          timeout: 5000,
+        }
+      );
       return data;
     } catch (error) {
       throw thunkAPI.rejectWithValue(error.massage);
