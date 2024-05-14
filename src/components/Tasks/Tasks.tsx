@@ -99,6 +99,7 @@ export const Tasks = () => {
         tasks={tasks}
         functionsTask={{ onDelete: onDeleteTask, onSubmitForm: onEditTask }}
       />
+
       <button
         type="button"
         onClick={() => setShowForm(prevState => !prevState)}

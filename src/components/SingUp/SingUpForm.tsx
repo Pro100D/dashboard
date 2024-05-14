@@ -1,16 +1,20 @@
 import { Container } from 'components/shared/Container';
 import {
   InvitingText,
+  LandingForm,
   LandingInput,
   LandingSection,
   LandingText,
   LandingTitle,
   SubmitBtn,
+  SwapFormLendingButton,
+  SwapFormTextWrapper,
 } from 'pages/Landing/Landing.styled';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signUp } from '../../redux/auth/operations';
 import { AppDispatch } from 'redux/store';
+import { showSingInForm } from '../../redux/auth/AuthSlice';
 
 export const SingUpForm = () => {
   const [email, setEmail] = useState('');
@@ -38,11 +42,9 @@ export const SingUpForm = () => {
           quests and exciting challenges.
         </LandingText>
 
-        <InvitingText>
-          Choose your name, email and password to sign up
-        </InvitingText>
+        <InvitingText>Fill out the form with your details</InvitingText>
 
-        <form onSubmit={onSubmitForm}>
+        <LandingForm onSubmit={onSubmitForm}>
           <LandingInput type="text" placeholder="Enter you name" />
 
           <LandingInput
@@ -64,7 +66,16 @@ export const SingUpForm = () => {
             }}
           />
           <SubmitBtn type="submit">go!</SubmitBtn>
-        </form>
+          <SwapFormTextWrapper>
+            <p>Already have an account?</p>
+            <SwapFormLendingButton
+              type="button"
+              onClick={() => dispatch(showSingInForm(true))}
+            >
+              Sing In!
+            </SwapFormLendingButton>
+          </SwapFormTextWrapper>
+        </LandingForm>
       </LandingSection>
     </Container>
   );

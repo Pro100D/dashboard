@@ -1,21 +1,25 @@
 import { Container } from 'components/shared/Container';
 import {
   InvitingText,
+  LandingForm,
   LandingInput,
   LandingSection,
   LandingText,
   LandingTitle,
   SubmitBtn,
+  SwapFormLendingButton,
+  SwapFormTextWrapper,
 } from 'pages/Landing/Landing.styled';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { singIn } from '../../redux/auth/operations';
 import { AppDispatch } from 'redux/store';
-import { createNewUser } from '../../redux/auth/AuthSlice';
+import { showSingInForm } from '../../redux/auth/AuthSlice';
 
 export const SingInForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const dispatch = useDispatch<AppDispatch>();
   const onSubmitForm = async (e: FormEvent) => {
     e.preventDefault();
@@ -40,7 +44,7 @@ export const SingInForm = () => {
 
         <InvitingText>Choose your email, password to log in</InvitingText>
 
-        <form onSubmit={onSubmitForm}>
+        <LandingForm onSubmit={onSubmitForm}>
           <LandingInput
             type="email"
             placeholder="Enter you email"
@@ -60,11 +64,16 @@ export const SingInForm = () => {
             }}
           />
           <SubmitBtn type="submit">go!</SubmitBtn>
-
-          <button type="button" onClick={() => dispatch(createNewUser())}>
-            Create new user
-          </button>
-        </form>
+          <SwapFormTextWrapper>
+            <p>Do not have account?</p>
+            <SwapFormLendingButton
+              type="button"
+              onClick={() => dispatch(showSingInForm(false))}
+            >
+              Sing Up!
+            </SwapFormLendingButton>
+          </SwapFormTextWrapper>
+        </LandingForm>
       </LandingSection>
     </Container>
   );

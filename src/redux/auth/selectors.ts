@@ -5,7 +5,8 @@ export const isAuthSelector = (state: RootState) => state.auth.isAuth;
 export const refreshingUserSelector = (state: RootState) =>
   state.auth.isRefreshing;
 
-export const isRegisterSelector = (state: RootState) => state.auth.isRegister;
+export const isShowSingInFormSelector = (state: RootState) =>
+  state.auth.showSingInForm;
 
 const accessTokenSelector = (state: RootState) => state.auth.accessToken;
 const refreshTokenSelector = (state: RootState) => state.auth.refreshToken;

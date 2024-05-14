@@ -9,11 +9,31 @@ export const TaskList: React.FC<{
     onSubmitForm: (e: FormEvent) => void;
   };
 }> = ({ tasks, functionsTask }) => {
+  const groupedTasks = tasks.reduce((acc, task: Task) => {
+    const dateKey = task.date.toString();
+
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(task);
+    return acc;
+  }, {});
   return (
-    <>
-      {tasks.map((task: Task) => (
-        <TaskItem key={task._id} task={task} functionsTask={functionsTask} />
+    <div>
+      {Object.keys(groupedTasks).map(dateKey => (
+        <div key={dateKey}>
+          <h2>{dateKey}</h2>
+          <ul>
+            {groupedTasks[dateKey].map((task: Task) => (
+              <TaskItem
+                key={task._id}
+                task={task}
+                functionsTask={functionsTask}
+              />
+            ))}
+          </ul>
+        </div>
       ))}
-    </>
+    </div>
   );
 };

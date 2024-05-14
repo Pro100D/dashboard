@@ -4,7 +4,7 @@ import { theme } from 'styles';
 export const LandingSection = styled.section`
   padding-top: 80px;
 
-  background-color: #ffffff;
+  background-color: #f2f3f7;
 `;
 
 export const LandingTitle = styled.h2`
@@ -25,7 +25,7 @@ export const LandingText = styled.p`
   line-height: calc(29 / 18);
   letter-spacing: 0.36px;
 
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 
   font-weight: 700;
 `;
@@ -41,9 +41,16 @@ export const InvitingText = styled.p`
   margin-bottom: 32px;
 `;
 
+export const LandingForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+`;
+
 export const LandingInput = styled.input`
   border: none;
   border-bottom: 1px solid ${theme.colors.accentColor};
+  background-color: transparent;
 
   padding-left: 4px;
 
@@ -65,5 +72,30 @@ export const SubmitBtn = styled.button`
   font-weight: 700;
   line-height: normal;
   letter-spacing: 0.48px;
-  filter: drop-shadow(4px 4px 4px rgba(0, 215, 255, 0.25));
+  filter: drop-shadow(1px 1px 8px rgb(255, 133, 28));
+
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto;
+`;
+
+export const SwapFormTextWrapper = styled.div`
+  display: flex;
+  align-items: baseline;
+
+  color: #b9c3c8;
+
+  line-height: calc(45 / 14);
+  letter-spacing: 0.28px;
+  margin-bottom: 32px;
+`;
+
+export const SwapFormLendingButton = styled.button`
+  background-color: transparent;
+  border: 0;
+  color: ${theme.colors.accentColor};
+
+  cursor: pointer;
+  border-bottom: 1px solid ${theme.colors.accentColor};
 `;

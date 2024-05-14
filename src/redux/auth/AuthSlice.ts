@@ -12,7 +12,7 @@ type InitialStateType = {
   isLoading: boolean;
   isRefreshing: boolean;
   isAuth: boolean;
-  isRegister: boolean;
+  showSingInForm: boolean;
   error: null;
 };
 
@@ -28,7 +28,7 @@ const initialState: InitialStateType = {
   isLoading: false,
   isRefreshing: false,
   isAuth: false,
-  isRegister: false,
+  showSingInForm: false,
   error: null,
 };
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
@@ -60,8 +60,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    createNewUser: state => {
-      state.isRegister = false;
+    showSingInForm: (state, { payload }) => {
+      state.showSingInForm = payload;
     },
   },
   extraReducers: builder =>
@@ -70,7 +70,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isRefreshing = false;
         state.error = null;
-        state.isRegister = true;
+        state.showSingInForm = true;
       })
       .addCase(singIn.fulfilled, (state, { payload }) => {
         state.sid = payload.sid;
@@ -103,5 +103,5 @@ const authSlice = createSlice({
       .addMatcher(isPendingAction, handlePending)
       .addMatcher(isRejectedAction, handleRejected),
 });
-export const { createNewUser } = authSlice.actions;
+export const { showSingInForm } = authSlice.actions;
 export const authReducer = authSlice.reducer;
